@@ -47,7 +47,35 @@ class Tile
         valid_coords.map { |pos| @board[pos] } #=> for testing @board[pos] => |row, col| @board[row][col]
     end #=> returns the neighboring tiles 
 
-  
+    def adjacent_bomb_count #=> counts the number of bomb tiles adjacent
+        self.neighbors.select(&:bombed?).count
+    end
+
+    def plant_bomb #=> flips @bombed boolean to true
+        @bombed = true
+    end
+
+    def toggle_flag #=> flips boolean for flagged unless the tile is already explored
+        @flagged = !@flagged unless @explored
+    end
+
+    def explore
+        # do not explore a location if the tile is flagged
+        return self if flagged?
+
+        # do not explore tiles that have already been explored
+        return self if explored?
+
+        # flipping boolean for explored variable to true
+        @explored = true
+
+        if !bombed? && adjacent_bomb_count == 0
+            neighbors.each(&:explore)
+        end
+
+        self
+    end
+
 end
 
 
