@@ -59,22 +59,58 @@ class Tile
         @flagged = !@flagged unless @explored
     end
 
-    def explore
+    def explore #=> recursion!! 
         # do not explore a location if the tile is flagged
         return self if flagged?
 
         # do not explore tiles that have already been explored
         return self if explored?
 
+        #=> ^^ base case for recursion method
+
         # flipping boolean for explored variable to true
-        @explored = true
+        @explored = true 
 
         if !bombed? && adjacent_bomb_count == 0
-            neighbors.each(&:explore)
-        end
+            neighbors.each(&:explore) 
+        end #=> if the tile is not a bomb and the adjacent bomb count is 0
+        #=> loop over each of the neighbors and call explore setting the tile 
+        #=> @explored variable to TRUE marking it as explored!
 
-        self
+        self #=> return the tile
+
+        #=> ^^ recursive case for recusion method!! 
     end
+
+    def inspect #=> Limits the information when inspecting the Tile this way we dont load the board each time
+    {   pos: pos, 
+        bombed: bombed?,
+        flagged: flagged?,
+        explored: explored? }.inspect
+    end #=> creating a hash with key value pairs for the instance variables
+
+    def render #=> rendering tiles 
+        if flagged?
+            "F" #=> if the flagged == true show "F" for the tile
+        elsif explored? #=> if explored? == true and adjacent_bomb_count == 0 show "_" otherwise show the count
+            adjacent_bomb_count == ? "_" : adjacent_bomb_count.to_s
+        else #=> if its not flagged? or explored? show "*"
+            "*"
+        end
+    end
+
+    def reveal #=> used to fully reveal the baord at the end of the game
+        if flagged? #=> if the tile was flagged and the tile and bombed? == true return "F" found a bomb otherwise "f" was not a bomb
+            bombed? ? "F" : "f"
+        elsif bombed? #=> if bombed? == true for the tile and it was explored ending the game return "X" otherwise show "B"
+            explored? ? "X" : "B"
+        else #=> for none flagged or none explored tiles show the adjacent bomb count
+            adjacent_bomb_count == 0 ? "_" : adjacent_bomb_count.to_s
+        end
+    end
+
+
+
 
 end
 
