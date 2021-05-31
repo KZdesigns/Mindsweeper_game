@@ -93,7 +93,7 @@ class Tile
         if flagged?
             "F" #=> if the flagged == true show "F" for the tile
         elsif explored? #=> if explored? == true and adjacent_bomb_count == 0 show "_" otherwise show the count
-            adjacent_bomb_count == ? "_" : adjacent_bomb_count.to_s
+            adjacent_bomb_count == 0 ? "_" : adjacent_bomb_count.to_s
         else #=> if its not flagged? or explored? show "*"
             "*"
         end
