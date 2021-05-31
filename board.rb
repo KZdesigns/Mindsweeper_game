@@ -1,7 +1,7 @@
 require_relative 'tile'
 
 class Board
-    attr_reader :grid_size, :num_bombs
+    attr_reader :grid_size, :num_bombs #=> allows read only access to grid_size and :num_bombs
 
     def initialize(grid_size, num_bombs) #=> initializing new board object
         @grid_size, @num_bombs = grid_size, num_bombs #=> setting instance variables to parameters passed
@@ -18,19 +18,19 @@ class Board
         @grid.flatten.any? { |tile| tile.bombed? && tile.explored? }
     end #=> makes @grid a 1D array and checks if any of the tile bombs and explored meaning the explored tile is bomb and the play loses
 
-    def render(reveal = false) #=> 
-        @grid.map do |row|
+    def render(reveal = false) #=> render method by default sets reveal to false
+        @grid.map do |row| 
             row.map do |tile|
                 reveal ? tile.reveal : tile.render
             end.join("")
-        end.join("\n")
+        end.join("\n") #=> taking each row of the grid and look at each tile if reveal is true or tile.reveal if false tile.render
     end
 
-    def reveal
+    def reveal #=> works with the #render to display the tiles of the board correctly
         render(true)
     end
 
-    def won?
+    def won? #=> method to check to see if the play has won 
         @grid.flatten.all? { |tile| tile.bombed? != tile.explored? } 
     end
 
